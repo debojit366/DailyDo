@@ -2,6 +2,8 @@ import {Routes,Route} from 'react-router-dom'
 import Homepage from './pages/Homepage.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import Admin from './pages/Admin.jsx'
+import SettingsPage from './pages/Settings.jsx'
 function App() {
 
   return (
@@ -10,6 +12,8 @@ function App() {
         <Route path = "/" element = {<Homepage/>}/>
         <Route path = "/login" element = {<Login/>}/>
         <Route path = "/register" element = {<Register/>}/>
+        <Route path = "/admin" element = {<Admin/>}/>
+        <Route path = "/settings" element = {<SettingsPage/>}/>
       </Routes>
     </>
   )
