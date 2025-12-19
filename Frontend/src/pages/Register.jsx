@@ -1,7 +1,38 @@
 import React from 'react';
 // import { useNavigate } from 'react-router-dom'; // Uncomment if using navigation
-
+import { useState } from 'react';
+import axios from 'axios'
 const AuthPage = () => {
+  const [username,setUsername] = useState('')
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+  const handleRegisterSubmit = async (e) =>{
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://localhost:5000/api/v1/auth/register',{
+        username:username,
+        email:email,
+        password:password
+      })
+
+      console.log("user registered successfully")
+      setPassword('');
+      setEmail('')
+      setUsername('')
+    } catch (error) {
+      console.log(error);
+      console.log("registration submit form failed")
+    }
+  }
+  const onChangeUsername = (e)=>{
+    setUsername(e.target.value);
+  }
+  const onChangeEmail = (e)=>{
+    setEmail(e.target.value);
+  }
+  const onChangePassword = (e)=>{
+    setPassword(e.target.value)
+  }
   // const navigate = useNavigate(); // Uncomment to use hooks for button clicks
 
   // --- STYLES ---
@@ -183,24 +214,42 @@ const AuthPage = () => {
           <p style={styles.helperText}>or use your email for registration:</p>
           
           {/* Form Inputs */}
-          <form style={styles.form}>
+          <form style={styles.form} onSubmit={handleRegisterSubmit}>
             
             {/* Name Input */}
             <div style={styles.inputContainer}>
               <span style={styles.inputIcon}>👤</span> {/* Unicode User Icon */}
-              <input type="text" placeholder="Name" style={styles.inputField} />
+              <input type="text"
+              placeholder="Name"
+              name="username"
+              style={styles.inputField}
+              value = {username}
+              onChange={onChangeUsername}
+              />
             </div>
 
              {/* Email Input */}
              <div style={styles.inputContainer}>
               <span style={styles.inputIcon}>✉️</span> {/* Unicode Envelope Icon */}
-              <input type="email" placeholder="Email" style={styles.inputField} />
+              <input type="email"
+              placeholder="Email"
+              name='email'
+              value={email}
+              onChange={onChangeEmail}
+              style={styles.inputField}
+
+               />
             </div>
 
              {/* Password Input */}
              <div style={styles.inputContainer}>
               <span style={styles.inputIcon}>🔒</span> {/* Unicode Lock Icon */}
-              <input type="password" placeholder="Password" style={styles.inputField} />
+              <input type="password"
+              placeholder="Password"
+              name='password'
+              value={password}
+              onChange={onChangePassword}
+              style={styles.inputField} />
             </div>
 
             <button type="submit" style={styles.signUpBtn}>SIGN UP</button>

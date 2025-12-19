@@ -1,9 +1,39 @@
 import React from 'react';
-// import { useNavigate } from 'react-router-dom'; // Uncomment for navigation
+import axios from 'axios'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Uncomment for navigation
 
 const LoginPage = () => {
-  // const navigate = useNavigate(); // Uncomment to use hooks
+  const [username,setUsername] = useState('');
+  const [password,setPassword] = useState('');
 
+  const navigate = useNavigate(); // Uncomment to use hooks
+  const handleLoginSubmit = async (e)=>{
+    e.preventDefault()
+    try {
+      const res = await axios.post('http://localhost:5000/api/v1/auth/login',{
+      username:username,
+      password:password
+      })
+      if(res.data.token){
+        console.log("user logged in successfully")
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('isLoggedIn', 'true');
+        setUsername('');
+        setPassword('');
+        navigate(`/admin/${res.data.user.id}`);
+      }
+    } catch (error) {
+      console.error("Login Error:", error.response?.data?.message || error.message);
+      alert("Invalid Credentials!");
+    }
+  }
+  const onChangeUsername = (e)=>{
+    setUsername(e.target.value)
+  }
+  const onChangePassword = (e)=>{
+    setPassword(e.target.value)
+  }
   // --- STYLES (Reused & Adapted) ---
   const styles = {
     pageContainer: {
@@ -171,17 +201,25 @@ const LoginPage = () => {
           
           <p style={styles.helperText}>or use your email account:</p>
           
-          <form style={styles.form}>
+          <form style={styles.form} onSubmit={handleLoginSubmit}>
             {/* Email Input */}
             <div style={styles.inputContainer}>
               <span style={styles.inputIcon}>✉️</span>
-              <input type="email" placeholder="Email" style={styles.inputField} />
+              <input type="text"
+              placeholder="username"
+              value={username}
+              onChange={onChangeUsername}
+              style={styles.inputField} />
             </div>
 
             {/* Password Input */}
             <div style={styles.inputContainer}>
               <span style={styles.inputIcon}>🔒</span>
-              <input type="password" placeholder="Password" style={styles.inputField} />
+              <input type="password" 
+              placeholder="Password" 
+              value={password}
+              onChange={onChangePassword}
+              style={styles.inputField} />
             </div>
 
             <a href="#" style={styles.forgotPassword}>Forgot your password?</a>
@@ -199,7 +237,7 @@ const LoginPage = () => {
           
           {/* This button should link to your Register Page */}
           {/* onClick={() => navigate('/register')} */}
-          <button style={styles.signUpBtn}>SIGN UP</button>
+          <button style={styles.signUpBtn} type="submit">SIGN UP</button>
         </div>
 
       </div>
